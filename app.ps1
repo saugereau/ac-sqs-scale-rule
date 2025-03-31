@@ -17,9 +17,10 @@ Write-Host "Building and pushing job image..."
 
 $sourcePath = "src/DemoApi"
 
-$containerImageName = "$($ProjectName.ToLower())-api"
+$containerImageName = "demo-api"
 $containerImageTag = "latest"
-
+$awsAccessKeyId = [Environment]::GetEnvironmentVariable('AWS_ACCESS_KEY_ID')
+$awsSecretAccessKey = [Environment]::GetEnvironmentVariable('AWS_SECRET_ACCESS_KEY')
 $acrName = "$($ProjectName.ToLower())acr".Replace("-", "")
 
 $fullImageName = "$acrName.azurecr.io/$($containerImageName):$($containerImageTag)"
@@ -38,4 +39,8 @@ Write-Host "Deploying container to Azure..."
 
 $resourceGroupName = $ProjectName + "-rg"
 
-New-AzResourceGroupDeployment -ResourceGroupName $resourceGroupName -TemplateFile .\app.bicep -TemplateParameterObject @{ projectName = $ProjectName }
+New-AzResourceGroupDeployment -ResourceGroupName $resourceGroupName -TemplateFile .\app.bicep -TemplateParameterObject @{ 
+    projectName = $ProjectName 
+    awsAccessKeyId = $awsAccessKeyId 
+    awsSecretAccessKey = $awsSecretAccessKey
+    }

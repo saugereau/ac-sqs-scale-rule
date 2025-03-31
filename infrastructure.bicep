@@ -13,11 +13,7 @@ var ContainerAppEnvironmentName = toLower('${projectName}-cae')
 var LogAnalyticsWorkspaceName = toLower('${projectName}-log')
 var AppInsightsName = toLower('${projectName}-appi')
 var AcrName = replace(('${projectName}-acr'), '-', '')
-var SqlServerName = toLower('${projectName}-sql')
-var DatabaseName = toLower('${projectName}-sqldb')
 var ManagedIdentityName = toLower('${projectName}-id')
-var SqlAdminLogin = 'sqladmin'
-var SqlAdminPassword = 'RzU5czVW&^xJZ^SNxY'
 
 // ******************
 // ** Resources
@@ -64,31 +60,10 @@ resource acr 'Microsoft.ContainerRegistry/registries@2023-07-01' = {
   }
 }
 
-resource sqlServer 'Microsoft.Sql/servers@2024-05-01-preview' = {
-  name: SqlServerName
-  location: location
-  properties: {
-    administratorLogin: SqlAdminLogin
-    administratorLoginPassword: SqlAdminPassword
-  }
-}
-
-resource sqlDatabase 'Microsoft.Sql/servers/databases@2024-05-01-preview' = {
-  name: DatabaseName
-  location: location
-  parent: sqlServer
-  sku: {
-    name: 'Standard'
-    tier: 'Standard'
-    capacity: 10
-  }
-}
-
 resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
   name: ManagedIdentityName
   location: location
 }
-
 resource acrPullAuthorization 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: guid(acr.id, managedIdentity.id, 'AcrPull')
   properties: {

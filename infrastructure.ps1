@@ -15,4 +15,4 @@ param(
 
 $resourceGroupName = $ProjectName + "-rg"
 
-New-AzResourceGroupDeployment -ResourceGroupName $resourceGroupName -TemplateFile .\infrastructure.bicep -TemplateParameterObject @{ projectName = $ProjectName } -AsJob
+New-AzResourceGroupDeployment -ResourceGroupName $resourceGroupName -TemplateFile .\infrastructure.bicep -TemplateParameterObject @{ projectName = $ProjectName } 
